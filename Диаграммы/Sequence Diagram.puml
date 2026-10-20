@@ -1,4 +1,7 @@
 @startuml
+autonumber
+skinparam sequenceMessageAlign center
+
 actor Client
 participant "UI Клиента" as UI_Client
 participant "Сервер (Backend)" as Backend
@@ -6,16 +9,23 @@ database "База данных" as DB
 actor Trainer
 participant "UI Тренера" as UI_Trainer
 
+== Заполнение дневника Клиентом на определенную дату ==
+Client -> UI_Client: Выбирает дату (например, вчерашний день)
 Client -> UI_Client: Вводит данные о еде (продукт, граммовка)
-UI_Client -> Backend: POST /nutrition/add
-Backend -> Backend: Рассчитать КБЖУ (вызов API базы продуктов)
-Backend -> DB: Сохранить запись (NutritionLog)
-DB --> Backend: OK
+UI_Client -> Backend: POST /nutrition/add\n(clientId, date, foodData)
+Backend -> Backend: Рассчитать КБЖУ\n(вызов API базы продуктов)
+Backend -> DB: Сохранить запись (NutritionLog)\nс указанной датой
+DB --> Backend: OK (Запись создана)
 Backend --> UI_Client: Успешно сохранено
+UI_Client --> Client: Показать сообщение "Данные за [дата] добавлены!"
 
+== Просмотр отчета Тренером за выбранную дату ==
 Trainer -> UI_Trainer: Открывает карточку клиента
-UI_Trainer -> Backend: GET /nutrition/{clientId}/report
-Backend -> DB: SELECT * FROM nutrition_logs WHERE client_id = ?
-DB --> Backend: Данные (список продуктов и КБЖУ)
-Backend --> UI_Trainer: Отобразить график и отчет по КБЖУ
+Trainer -> UI_Trainer: Выбирает конкретную дату для отчета
+UI_Trainer -> Backend: GET /nutrition/{clientId}/report?date={selectedDate}
+Backend -> DB: SELECT * FROM nutrition_logs\nWHERE client_id = ? AND date = ?
+DB --> Backend: Данные за выбранную дату\n(список продуктов и КБЖУ)
+Backend --> UI_Trainer: Отобразить график и отчет по КБЖУ\nза выбранную дату
+UI_Trainer --> Trainer: Показать отчет за {selectedDate}
+
 @enduml
