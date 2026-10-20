@@ -1,0 +1,21 @@
+@startuml
+actor Client
+participant "UI Клиента" as UI_Client
+participant "Сервер (Backend)" as Backend
+database "База данных" as DB
+actor Trainer
+participant "UI Тренера" as UI_Trainer
+
+Client -> UI_Client: Вводит данные о еде (продукт, граммовка)
+UI_Client -> Backend: POST /nutrition/add
+Backend -> Backend: Рассчитать КБЖУ (вызов API базы продуктов)
+Backend -> DB: Сохранить запись (NutritionLog)
+DB --> Backend: OK
+Backend --> UI_Client: Успешно сохранено
+
+Trainer -> UI_Trainer: Открывает карточку клиента
+UI_Trainer -> Backend: GET /nutrition/{clientId}/report
+Backend -> DB: SELECT * FROM nutrition_logs WHERE client_id = ?
+DB --> Backend: Данные (список продуктов и КБЖУ)
+Backend --> UI_Trainer: Отобразить график и отчет по КБЖУ
+@enduml
