@@ -1,0 +1,72 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Trainer {
+  - id: UUID
+  - name: String
+  - email: String
+  + addClient(client: Client): void
+  + createSchedule(client: Client, date: Date): void
+  + viewNutritionReport(clientId: UUID): Report
+  + sendMessage(text: String): void
+}
+
+class Client {
+  - id: UUID
+  - name: String
+  - goal: String
+  - height: Float
+  - weight: Float
+  - age: Integer
+  + fillNutrition(food: String, calories: Float): void
+  + sendMessage(text: String): void
+}
+
+class ServicePackage {
+  - id: UUID
+  - name: String
+  - sessionsCount: Integer
+  - price: Float
+  - purchaseDate: Date
+}
+
+class ScheduledWorkout {
+  - id: UUID
+  - dateTime: DateTime
+  - status: String
+}
+
+class ProgressRecord {
+  - id: UUID
+  - date: Date
+  - clientWeight: Float
+  - workingWeight: Float
+  - exerciseName: String
+}
+
+class NutritionLog {
+  - id: UUID
+  - date: Date
+  - foodItems: String
+  - totalCalories: Float
+  - totalProteins: Float
+  - totalFats: Float
+  - totalCarbs: Float
+}
+
+class ChatMessage {
+  - id: UUID
+  - text: String
+  - timestamp: DateTime
+  - senderRole: String
+}
+
+Trainer "1" -- "*" Client : ведет >
+Trainer "1" -- "*" ScheduledWorkout : планирует >
+Trainer "1" -- "*" ProgressRecord : фиксирует >
+Client "1" -- "*" ServicePackage : покупает >
+Client "1" -- "*" ScheduledWorkout : посещает >
+Client "1" -- "*" NutritionLog : ведет >
+Client "1" -- "1" ChatMessage : отправляет >
+Trainer "1" -- "1" ChatMessage : отвечает >
+@enduml
