@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+actor "Тренер" as Trainer
+actor "Клиент" as Client
+
+rectangle "Веб-приложение для фитнес-тренеров" {
+  usecase "Авторизация" as UC_Auth
+  usecase "Добавление клиента и его целей" as UC_AddClient
+  usecase "Назначение пакета услуг" as UC_Package
+  usecase "Составление расписания тренировок" as UC_Schedule
+  usecase "Фиксация прогресса (вес, рабочие веса)" as UC_Progress
+  usecase "Просмотр отчета по питанию (КБЖУ)" as UC_Nutrition
+  usecase "Общение в чате" as UC_Chat
+  usecase "Заполнение дневника питания" as UC_FillNutrition
+}
+
+Trainer --> UC_Auth
+Trainer --> UC_AddClient
+Trainer --> UC_Package
+Trainer --> UC_Schedule
+Trainer --> UC_Progress
+Trainer --> UC_Nutrition
+Trainer --> UC_Chat
+
+Client --> UC_Auth
+Client --> UC_Chat
+Client --> UC_FillNutrition
+
+UC_Nutrition .> UC_FillNutrition : <<include>>
+@enduml
