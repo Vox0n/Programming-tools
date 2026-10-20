@@ -1,0 +1,18 @@
+@startuml
+[*] --> Запланирована : Тренер создал запись в расписании
+state "Запланирована" as Planned
+state "В процессе" as InProgress
+state "Завершена" as Completed
+state "Отменена (Клиент)" as Cancelled_Client
+state "Пропущена (Неявка)" as Missed
+
+Planned --> InProgress : Начало тренировки по времени
+Planned --> Cancelled_Client : Клиент предупредил за 24 часа
+Planned --> Missed : Время пришло, клиент не пришел и не предупредил
+
+InProgress --> Completed : Тренер внес прогресс и закрыл занятие
+
+Completed --> [*]
+Cancelled_Client --> [*]
+Missed --> [*]
+@enduml
